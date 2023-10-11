@@ -1,7 +1,7 @@
-import { Fragment } from 'react'
 import './index.css'
 
 import { useGetAxiosAxios } from '../query'
+import { CommonLayout } from '../components/layouts/common'
 
 export default function Page() {
   const { data, isLoading, isError, refetch } = useGetAxiosAxios()
@@ -15,7 +15,7 @@ export default function Page() {
   }
 
   return (
-    <Fragment>
+    <CommonLayout>
       <h1> Repo: {data.name}</h1>
 
       <p className="read-the-docs">
@@ -38,6 +38,6 @@ export default function Page() {
         <h1>Hello, Bootstrap and Vite!</h1>
         <button className="btn btn-primary">Primary button</button>
       </div>
-    </Fragment>
+    </CommonLayout>
   )
 }
