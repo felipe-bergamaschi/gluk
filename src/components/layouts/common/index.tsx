@@ -16,7 +16,7 @@ export function CommonLayout({ children, title, breadcrumbs }: CommonLayoutProps
         <Header />
 
         <div className="bg-body flex-fill d-flex flex-column p-3">
-          {title && <h1> {title} </h1>}
+          {title && <h2> {title} </h2>}
 
           {breadcrumbs && (
             <nav aria-label="breadcrumb">
