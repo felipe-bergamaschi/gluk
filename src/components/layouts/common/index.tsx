@@ -1,10 +1,10 @@
+import { Body, BodyProps } from "./body";
 import { Header } from "./header"
+import { RightSidebar } from "./rightSidebar";
 import { Sidebar } from "./sidebar"
 
-interface CommonLayoutProps {
-  title: string;
-  breadcrumbs?: string[];
-  children: React.ReactNode
+interface CommonLayoutProps extends BodyProps {
+  // children: React.ReactNode
 }
 
 export function CommonLayout({ children, title, breadcrumbs }: CommonLayoutProps) {
@@ -15,23 +15,12 @@ export function CommonLayout({ children, title, breadcrumbs }: CommonLayoutProps
       <div className="flex-fill d-flex flex-column">
         <Header />
 
-        <div className="bg-body flex-fill d-flex flex-column p-3">
-          <h2> {title} </h2>
+        <div className="bg-body flex-fill d-flex">
+          <Body title={title} breadcrumbs={breadcrumbs}>
+            {children}
+          </Body>
 
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">Home</li>
-              <li className="breadcrumb-item">{title}</li>
-
-              {breadcrumbs?.map((breadcrumb, index) => (
-                <li key={index} className="breadcrumb-item">
-                  {breadcrumb}
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          {children}
+          <RightSidebar />
         </div>
       </div>
     </div>
