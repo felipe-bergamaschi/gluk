@@ -6,6 +6,12 @@ export default function Page() {
     <CommonLayout
       title='Nova venda'
       breadcrumbs={['Cadastro de venda']}
+      sidebar={{
+        title: 'Detalhes da venda',
+        content: 'Sidebar content',
+        open: true,
+        onClose: () => { }
+      }}
     >
       <ProductContent />
     </CommonLayout>

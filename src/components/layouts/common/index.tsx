@@ -1,13 +1,14 @@
 import { Body, BodyProps } from "./body";
 import { Header } from "./header"
-import { RightSidebar } from "./rightSidebar";
+import { RightSidebar, RightSidebarProps } from "./rightSidebar";
 import { Sidebar } from "./sidebar"
 
 interface CommonLayoutProps extends BodyProps {
+  sidebar?: RightSidebarProps;
   // children: React.ReactNode
 }
 
-export function CommonLayout({ children, title, breadcrumbs }: CommonLayoutProps) {
+export function CommonLayout({ children, title, breadcrumbs, sidebar }: CommonLayoutProps) {
   return (
     <div className="w-100 h-100 overflow-hidden d-flex">
       <Sidebar />
@@ -20,7 +21,9 @@ export function CommonLayout({ children, title, breadcrumbs }: CommonLayoutProps
             {children}
           </Body>
 
-          <RightSidebar />
+          {sidebar && (
+            <RightSidebar {...sidebar} />
+          )}
         </div>
       </div>
     </div>
