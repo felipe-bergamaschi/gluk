@@ -1,6 +1,6 @@
 import { TextColor } from "../../theme/types"
 
-interface IconProps {
+export interface IconProps {
   name: string;
   size?: number;
   color?: TextColor;
