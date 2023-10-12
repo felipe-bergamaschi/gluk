@@ -1,6 +1,7 @@
 import { Button } from "@/components/button";
 import { Icon } from "@/components/icon";
 import { products } from "@/services/mock/products";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface ProductListProps {
   products: typeof products
@@ -32,7 +33,7 @@ export function ProductList({ products }: ProductListProps) {
             </p>
 
             <p className="h4">
-              {product.price}
+              {formatCurrency(product.price)}
             </p>
 
             <Button>
