@@ -6,7 +6,7 @@ export interface BodyProps {
 
 export function Body({ children, title, breadcrumbs }: BodyProps) {
   return (
-    <div className="container d-flex flex-column p-3">
+    <div className="container d-flex flex-column p-3 overflow-x-auto">
       <h2> {title} </h2>
 
       <nav aria-label="breadcrumb">

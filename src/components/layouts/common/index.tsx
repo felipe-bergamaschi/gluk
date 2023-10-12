@@ -15,7 +15,7 @@ export function CommonLayout({ children, title, breadcrumbs }: CommonLayoutProps
       <div className="flex-fill d-flex flex-column">
         <Header />
 
-        <div className="bg-body flex-fill d-flex">
+        <div className="bg-body flex-fill d-flex overflow-hidden">
           <Body title={title} breadcrumbs={breadcrumbs}>
             {children}
           </Body>
