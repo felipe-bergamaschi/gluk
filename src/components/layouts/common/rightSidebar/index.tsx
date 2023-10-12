@@ -3,11 +3,12 @@ import { IconButton } from "@/components/iconButton";
 export interface RightSidebarProps {
   title: string;
   open: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   content: React.ReactNode;
+  hideCloseButton?: boolean;
 }
 
-export function RightSidebar({ open, title, onClose, content }: RightSidebarProps) {
+export function RightSidebar({ open, title, onClose, content, hideCloseButton = false }: RightSidebarProps) {
   if (!open) {
     return null;
   }
@@ -17,10 +18,12 @@ export function RightSidebar({ open, title, onClose, content }: RightSidebarProp
       <div className="w-100 d-flex align-items-center justify-content-between border-bottom px-3" style={{ height: 64 }}>
         <h5 className="m-0">{title}</h5>
 
-        <IconButton name="x" onClick={onClose} />
+        {!hideCloseButton && (
+          <IconButton name="x" onClick={onClose} />
+        )}
       </div>
 
-      <div className="content">
+      <div className="d-flex flex-column flex-fill">
         {content}
       </div>
     </div>

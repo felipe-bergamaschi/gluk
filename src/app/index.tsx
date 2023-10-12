@@ -1,3 +1,4 @@
+import { OrderDetails } from '@/features/orderDetails'
 import { CommonLayout } from '../components/layouts/common'
 import { ProductContent } from '@/features/productContent'
 
@@ -8,9 +9,9 @@ export default function Page() {
       breadcrumbs={['Cadastro de venda']}
       sidebar={{
         title: 'Detalhes da venda',
-        content: 'Sidebar content',
+        content: <OrderDetails />,
         open: true,
-        onClose: () => { }
+        hideCloseButton: true,
       }}
     >
       <ProductContent />
