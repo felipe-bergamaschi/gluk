@@ -1,7 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { servers } from '../../swagger.json';
 
-const API_BASE_URL = servers[0].url;
+const API_BASE_URL = 'http://localhost:4000/api';
 
 export const AxiosInstance = Axios.create({
   baseURL: API_BASE_URL,
