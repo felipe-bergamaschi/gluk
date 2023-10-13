@@ -1,17 +1,30 @@
 import { Button } from "@/components/button";
 import { Icon } from "@/components/icon";
-import { useProducts } from "@/query";
+import { ProductsControllerGetResponse } from "@/query";
 import { formatCurrency } from "@/utils/formatCurrency";
 
-export function ProductList() {
-  const { data, isLoading } = useProducts()
+interface ProductListProps {
+  data: ProductsControllerGetResponse | undefined;
+  isLoading: boolean;
+}
 
+export function ProductList({ data, isLoading }: ProductListProps) {
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
+      </div>
+    )
+  }
+
+  if (data?.length === 0) {
+    return (
+      <div className="d-flex justify-content-center">
+        <p className="text-secondary">
+          Nenhum produto encontrado
+        </p>
       </div>
     )
   }

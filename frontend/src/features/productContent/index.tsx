@@ -4,17 +4,34 @@ import { ProductList } from "../productList";
 import { FormContainer } from "@/components/form/container";
 import { TextField } from "@/components/form/textField";
 
+import { useFindProducts, useProducts } from '../../query'
+
 import { debounce } from "debounce";
+import { useState } from "react";
 
 export function ProductContent() {
+  const { data: products, isLoading: loadingProducts } = useProducts()
+  const { data: findProducts, mutateAsync, isLoading: loadingFindProducts } = useFindProducts()
 
-  const debounceSearching = debounce((search: string) => {
-    console.log(search);
-  }, 1000);
+  const [useSearching, setUseSearching] = useState(false);
+
+  const productsList = useSearching ? findProducts : products;
+
+  const debounceSearching = debounce(async (search: string) => {
+    if (search.length < 3) {
+      setUseSearching(false);
+      return;
+    }
+
+    setUseSearching(true);
+    mutateAsync({
+      data: {
+        search
+      }
+    })
+  }, 500);
 
   function handleSearch(search: string) {
-    if (search.length < 3) return;
-
     debounceSearching(search);
   }
 
@@ -33,7 +50,10 @@ export function ProductContent() {
         />
       </FormContainer>
 
-      <ProductList />
+      <ProductList
+        data={productsList}
+        isLoading={loadingProducts || loadingFindProducts}
+      />
     </div>
   )
 }
