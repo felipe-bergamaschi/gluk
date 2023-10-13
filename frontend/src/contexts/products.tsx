@@ -19,7 +19,7 @@ export function Provider(props: ProviderProps) {
   const [products, setProducts] = useState<ProductsControllerGetResponseItem[] | null>(null);
 
   const handleSetProducts = useCallback((data: ProductsControllerGetResponseItem) => {
-    setProducts((prev) => (prev ? [...prev, data] : [data]))
+    setProducts((prev) => (prev ? [data, ...prev] : [data]))
   }, []);
 
   return (
