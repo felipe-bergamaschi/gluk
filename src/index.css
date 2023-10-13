@@ -12,6 +12,14 @@ body,
   padding: 0 !important;
 }
 
+ul {
+  padding: 0 !important;
+}
+
+li {
+  list-style: none !important;
+}
+
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

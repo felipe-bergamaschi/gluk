@@ -15,7 +15,13 @@ export function RightSidebar({ open, title, onClose, content, hideCloseButton = 
 
   return (
     <div className="d-flex flex-column border-start" style={{ width: 560 }}>
-      <div className="w-100 d-flex align-items-center justify-content-between border-bottom px-3" style={{ height: 64 }}>
+      <div
+        className="w-100 d-flex align-items-center justify-content-between border-bottom px-3"
+        style={{
+          height: 64,
+          minHeight: 64
+        }}
+      >
         <h5 className="m-0">{title}</h5>
 
         {!hideCloseButton && (
@@ -23,7 +29,7 @@ export function RightSidebar({ open, title, onClose, content, hideCloseButton = 
         )}
       </div>
 
-      <div className="d-flex flex-column flex-fill">
+      <div className="d-flex flex-column flex-fill overflow-hidden">
         {content}
       </div>
     </div>
