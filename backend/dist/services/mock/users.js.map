@@ -1,0 +1,1 @@
+{"version":3,"file":"users.js","sourceRoot":"","sources":["../../../src/services/mock/users.ts"],"names":[],"mappings":";;;AAAa,QAAA,KAAK,GAAG;IACnB;QACE,MAAM,EAAE,oBAAoB;QAC5B,IAAI,EAAE,2BAA2B;KAClC;IACD;QACE,MAAM,EAAE,QAAQ;QAChB,IAAI,EAAE,QAAQ;KACf;CACF,CAAA"}

@@ -1,21 +1,42 @@
 //@ts-nocheck
 import {
-  useQuery
+  useQuery,
+  useMutation
 } from '@tanstack/react-query'
 import type {
   UseQueryOptions,
+  UseMutationOptions,
   QueryFunction,
+  MutationFunction,
   UseQueryResult,
   QueryKey
 } from '@tanstack/react-query'
 import { request } from './api/axios';
 import type { ErrorType } from './api/axios';
+export interface DefInterface1101610396 {
+  search: string;
+}
+
 export type UsersControllerGetResponseItem = {
+  id: number;
   name: string;
-  id: string;
 };
 
 export type UsersControllerGetResponse = UsersControllerGetResponseItem[];
+
+export type SearchProductsControllerPostResponseItemImagesItem = {
+  id: string;
+  url: string;
+};
+
+export type SearchProductsControllerPostResponseItem = {
+  id: string;
+  name: string;
+  price: number;
+  images: SearchProductsControllerPostResponseItemImagesItem[];
+};
+
+export type SearchProductsControllerPostResponse = SearchProductsControllerPostResponseItem[];
 
 export type ProductsControllerGetResponseItemImagesItem = {
   id: string;
@@ -110,6 +131,55 @@ export const useProducts = <TData = Awaited<ReturnType<typeof products>>, TError
 }
 
 
+export const findProducts = (
+    defInterface1101610396: DefInterface1101610396,
+ ) => {
+      
+      
+      return request<SearchProductsControllerPostResponse>(
+      {url: `/search/products`, method: 'post',
+      headers: {'Content-Type': 'application/json', },
+      data: defInterface1101610396
+    },
+      );
+    }
+  
+
+
+export const getFindProductsMutationOptions = <TError = ErrorType<ErrorResponse>,
+    
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof findProducts>>, TError,{data: DefInterface1101610396}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof findProducts>>, TError,{data: DefInterface1101610396}, TContext> => {
+ const {mutation: mutationOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof findProducts>>, {data: DefInterface1101610396}> = (props) => {
+          const {data} = props ?? {};
+
+          return  findProducts(data,)
+        }
+
+        
+
+ 
+   return  { mutationFn, ...mutationOptions }}
+
+    export type FindProductsMutationResult = NonNullable<Awaited<ReturnType<typeof findProducts>>>
+    export type FindProductsMutationBody = DefInterface1101610396
+    export type FindProductsMutationError = ErrorType<ErrorResponse>
+
+    export const useFindProducts = <TError = ErrorType<ErrorResponse>,
+    
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof findProducts>>, TError,{data: DefInterface1101610396}, TContext>, }
+) => {
+    
+      const mutationOptions = getFindProductsMutationOptions(options);
+     
+      return useMutation(mutationOptions);
+    }
+    
 export const users = (
     
  signal?: AbortSignal
