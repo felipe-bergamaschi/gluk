@@ -1,16 +1,24 @@
 import { Button } from "@/components/button";
 import { Icon } from "@/components/icon";
-import { products } from "@/services/mock/products";
+import { useProducts } from "@/query";
 import { formatCurrency } from "@/utils/formatCurrency";
 
-interface ProductListProps {
-  products: typeof products
-}
+export function ProductList() {
+  const { data, isLoading } = useProducts()
 
-export function ProductList({ products }: ProductListProps) {
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="d-flex flex-wrap gap-3">
-      {products.map((product) => (
+      {data?.map((product) => (
         <div
           key={product.id}
           className="border rounded w-100"

@@ -1,21 +1,39 @@
 import { ContentTitle } from "@/components/contentTitle";
 import { ProductList } from "../productList";
-import { AutoComplete } from "@/components/form/input/autocomplete";
-import { products } from "@/services/mock/products";
 
+import { FormContainer } from "@/components/form/container";
+import { TextField } from "@/components/form/textField";
+
+import { debounce } from "debounce";
 
 export function ProductContent() {
+
+  const debounceSearching = debounce((search: string) => {
+    console.log(search);
+  }, 1000);
+
+  function handleSearch(search: string) {
+    if (search.length < 3) return;
+
+    debounceSearching(search);
+  }
+
   return (
     <div>
-      <div className="">
-        <ContentTitle subtitle="Pesquise pelos produtos e adicione na lista de venda">
-          Todos os produtos (7)
-        </ContentTitle>
+      <ContentTitle subtitle="Pesquise pelos produtos e adicione na lista de venda">
+        Todos os produtos (7)
+      </ContentTitle>
 
-        <AutoComplete />
+      <FormContainer onSubmit={handleSearch}>
+        <TextField
+          label="Buscar produtos"
+          name="search"
+          placeholder="Digite o nome do produto"
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+      </FormContainer>
 
-        <ProductList products={products} />
-      </div>
+      <ProductList />
     </div>
   )
 }
