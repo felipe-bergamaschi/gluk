@@ -38,7 +38,7 @@ export function ProductContent() {
   return (
     <div>
       <ContentTitle subtitle="Pesquise pelos produtos e adicione na lista de venda">
-        Todos os produtos (7)
+        Todos os produtos {`(${productsList?.length ?? 0})`}
       </ContentTitle>
 
       <FormContainer onSubmit={handleSearch}>
