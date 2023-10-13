@@ -1,9 +1,9 @@
 import type { Route } from '@kitajs/runtime';
 
 /**
- * @tag users
+ * @tag products
  */
-export async function get(this: Route<'users'>) {
+export async function get(this: Route<'products'>) {
   return [
     {
       "id": "ckdu44mn40gxh010405uwgbtw",

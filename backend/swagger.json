@@ -74,21 +74,64 @@
         ],
         "additionalProperties": false
       },
+      "ProductsControllerGetResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "url"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "price",
+            "images"
+          ],
+          "additionalProperties": false
+        }
+      },
       "UsersControllerGetResponse": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
-            "name": {
-              "type": "string"
-            },
             "id": {
+              "type": "number"
+            },
+            "name": {
               "type": "string"
             }
           },
           "required": [
-            "name",
-            "id"
+            "id",
+            "name"
           ],
           "additionalProperties": false
         }
@@ -96,6 +139,46 @@
     }
   },
   "paths": {
+    "/products": {
+      "get": {
+        "operationId": "products",
+        "tags": [
+          "products"
+        ],
+        "responses": {
+          "2XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsControllerGetResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "operationId": "users",

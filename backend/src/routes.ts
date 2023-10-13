@@ -11,6 +11,8 @@ import "@fastify/swagger";
 //@ts-ignore - we may have import type errors
 import * as HealthcheckController from "./routes/healthcheck";
 //@ts-ignore - we may have import type errors
+import * as ProductsController from "./routes/products";
+//@ts-ignore - we may have import type errors
 import * as UsersController from "./routes/users";
 
 /**
@@ -47,19 +49,56 @@ export const Kita = fp<{}>(
     });
 
     fastify.addSchema({
+      $id: "ProductsControllerGetResponse",
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          price: {
+            type: "number",
+          },
+          images: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: {
+                  type: "string",
+                },
+                url: {
+                  type: "string",
+                },
+              },
+              required: ["id", "url"],
+              additionalProperties: false,
+            },
+          },
+        },
+        required: ["id", "name", "price", "images"],
+        additionalProperties: false,
+      },
+    });
+
+    fastify.addSchema({
       $id: "UsersControllerGetResponse",
       type: "array",
       items: {
         type: "object",
         properties: {
+          id: {
+            type: "number",
+          },
           name: {
             type: "string",
           },
-          id: {
-            type: "string",
-          },
         },
-        required: ["name", "id"],
+        required: ["id", "name"],
         additionalProperties: false,
       },
     });
@@ -80,6 +119,25 @@ export const Kita = fp<{}>(
       //@ts-ignore - we may have unused params
       async (request, reply) => {
         return HealthcheckController.get();
+      }
+    );
+
+    fastify.get(
+      "/products",
+      {
+        schema: {
+          operationId: "products",
+          response: {
+            "2xx": { $ref: "ProductsControllerGetResponse" },
+            "4xx": { $ref: "ErrorResponse" },
+            "5xx": { $ref: "ErrorResponse" },
+          },
+          tags: ["products"],
+        },
+      },
+      //@ts-ignore - we may have unused params
+      async (request, reply) => {
+        return ProductsController.get();
       }
     );
 
@@ -111,4 +169,5 @@ export const Kita = fp<{}>(
 );
 
 export * as HealthcheckController from "./routes/healthcheck";
+export * as ProductsController from "./routes/products";
 export * as UsersController from "./routes/users";
