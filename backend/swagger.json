@@ -117,6 +117,49 @@
           "additionalProperties": false
         }
       },
+      "SearchProductsControllerPostResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "url"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "price",
+            "images"
+          ],
+          "additionalProperties": false
+        }
+      },
       "UsersControllerGetResponse": {
         "type": "array",
         "items": {
@@ -135,6 +178,18 @@
           ],
           "additionalProperties": false
         }
+      },
+      "def-interface--110-161--0-396": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "search"
+        ],
+        "additionalProperties": false
       }
     }
   },
@@ -152,6 +207,55 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProductsControllerGetResponse"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/products": {
+      "post": {
+        "operationId": "findProducts",
+        "tags": [
+          "products"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/def-interface--110-161--0-396"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchProductsControllerPostResponse"
                 }
               }
             }
