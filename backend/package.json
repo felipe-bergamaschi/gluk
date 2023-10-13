@@ -1,0 +1,50 @@
+{
+  "name": "kawasaki",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "generate": "prisma generate && kita generate",
+    "dev": "node scripts/watch",
+    "start": "prisma migrate deploy && node dist/index.js",
+    "build": "tsc -p tsconfig.build.json && tsc-alias",
+    "migrate": "prisma migrate dev && prisma generate",
+    "reset": "prisma migrate reset --skip-generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@kitajs/cli": "^1.0.9",
+    "@types/node": "^20.5.9",
+    "chokidar": "^3.5.3",
+    "debounce": "^1.2.1",
+    "fast-defer": "^1.1.7",
+    "is-running": "^2.1.0",
+    "prisma": "^5.2.0",
+    "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.7",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.3.0",
+    "@fastify/jwt": "^7.2.0",
+    "@fastify/swagger": "^8.9.0",
+    "@kitajs/runtime": "^1.0.13",
+    "@prisma/client": "^5.2.0",
+    "ajv-formats": "^2.1.1",
+    "argon2": "^0.31.1",
+    "close-with-grace": "^1.2.0",
+    "env-schema": "^5.2.0",
+    "fastify": "^4.22.2",
+    "fastify-plugin": "^4.5.1",
+    "fluent-json-schema": "^4.1.1",
+    "pino": "^8.15.0",
+    "pino-pretty": "^10.2.0",
+    "piscina": "^4.1.0",
+    "prisma-json-types-generator": "^3.0.0",
+    "tslib": "^2.6.2"
+  }
+}
