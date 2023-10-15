@@ -4,9 +4,15 @@ import { useCallback, useState } from 'react';
 
 import { createContext as createContextSelector, useContextSelector } from 'use-context-selector';
 
+interface IProduct extends ProductsControllerGetResponseItem {
+  quantity: number;
+  discount: number;
+}
+
 type ContextData = {
-  products: ProductsControllerGetResponseItem[] | null;
+  products: IProduct[] | null;
   handleSetProducts: (data: ProductsControllerGetResponseItem) => void;
+  updateProduct: (data: IProduct) => void;
 };
 
 type ProviderProps = {
@@ -16,17 +22,38 @@ type ProviderProps = {
 export const Context = createContextSelector({} as ContextData);
 
 export function Provider(props: ProviderProps) {
-  const [products, setProducts] = useState<ProductsControllerGetResponseItem[] | null>(null);
+  const [products, setProducts] = useState<IProduct[] | null>(null);
 
   const handleSetProducts = useCallback((data: ProductsControllerGetResponseItem) => {
-    setProducts((prev) => (prev ? [data, ...prev] : [data]))
+    const product: IProduct = {
+      ...data,
+      quantity: 1,
+      discount: 0,
+    };
+
+    setProducts((prev) => (prev ? [product, ...prev] : [product]))
+  }, []);
+
+  const updateProduct = useCallback((data: IProduct) => {
+    setProducts((prev) => {
+      if (!prev) return prev;
+
+      const index = prev.findIndex((product) => product.id === data.id);
+
+      if (index === -1) return prev;
+
+      prev[index] = data;
+
+      return [...prev];
+    });
   }, []);
 
   return (
     <Context.Provider
       value={{
         products,
-        handleSetProducts
+        handleSetProducts,
+        updateProduct,
       }}
     >
       {props.children}
@@ -37,9 +64,11 @@ export function Provider(props: ProviderProps) {
 export function useListProducts() {
   const products = useContextSelector(Context, (context) => context.products);
   const handleSetProducts = useContextSelector(Context, (context) => context.handleSetProducts);
+  const updateProduct = useContextSelector(Context, (context) => context.updateProduct);
 
   return {
     products,
-    handleSetProducts
+    handleSetProducts,
+    updateProduct,
   };
 }

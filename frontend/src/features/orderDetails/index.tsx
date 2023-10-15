@@ -1,16 +1,16 @@
 import { useState } from "react"
+import { debounce } from "debounce"
 
 import { Button } from "@/components/button"
 import { AutoComplete } from "@/components/form/input/autocomplete"
 import { Icon } from "@/components/icon"
 import { ProductList } from "./productList"
 
-import { useFindClients } from '../../query'
 import { FormContainer } from "@/components/form/container"
-import { debounce } from "debounce"
 import { Select } from "@/components/form/input/select"
 import { DatePicker } from "@/components/form/input/date"
 import { DateTime } from "@/components/form/input/time"
+import { useFindClients } from '../../query'
 
 interface FormData {
   client: {
@@ -78,7 +78,7 @@ export function OrderDetails() {
       <div className="p-3 flex-fill d-flex flex-column overflow-hidden">
         <AutoComplete
           name="client"
-          label="Buscar cliente (selecione com o teclado)"
+          label="Buscar cliente"
           onChange={handleChange}
           onSelected={(value) => {
             setFormData({

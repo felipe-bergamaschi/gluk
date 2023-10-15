@@ -1,7 +1,9 @@
+import { TextField } from "@/components/form/textField"
 import { useListProducts } from "@/contexts/products"
+import { changeFormatCurrency, formatCurrency, formatCurrencySubmit } from "@/utils/formatCurrency"
 
 export function ProductList() {
-  const { products } = useListProducts()
+  const { products, updateProduct } = useListProducts()
 
   return (
     <div className="flex-fill overflow-x-auto">
@@ -47,9 +49,52 @@ export function ProductList() {
               </button>
             </h2>
 
-            <div id={product.id} className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-              <div className="accordion-body">
-                Dados do produto
+            <div id={product.id} className="accordion-collapse collapse">
+              <div className="accordion-body p-0 d-flex gap-3 mt-3">
+                <TextField
+                  label="Valor unitário"
+                  name="price"
+                  defaultValue={formatCurrency(product.price)}
+                  onChangeMask={changeFormatCurrency}
+                  onChange={(e) => {
+                    const data = {
+                      ...product,
+                      price: formatCurrencySubmit(e),
+                    }
+
+                    updateProduct(data)
+                  }}
+                />
+
+                <TextField
+                  type="number"
+                  label="Quantidade"
+                  name="quantity"
+                  defaultValue={product.quantity.toString()}
+                  onChange={(e) => {
+                    const data = {
+                      ...product,
+                      quantity: Number(e.target.value),
+                    }
+
+                    updateProduct(data)
+                  }}
+                />
+
+                <TextField
+                  label="Desconto"
+                  name="discount"
+                  defaultValue={formatCurrency(product.discount)}
+                  onChangeMask={changeFormatCurrency}
+                  onChange={(e) => {
+                    const data = {
+                      ...product,
+                      discount: formatCurrencySubmit(e),
+                    }
+
+                    updateProduct(data)
+                  }}
+                />
               </div>
             </div>
           </div>
