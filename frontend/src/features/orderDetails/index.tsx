@@ -12,6 +12,9 @@ import { DatePicker } from "@/components/form/input/date"
 import { DateTime } from "@/components/form/input/time"
 import { useFindClients } from '../../query'
 import { Summary } from "./Summary"
+import { z } from "zod"
+import toast from "react-hot-toast"
+import { useListProducts } from "@/contexts/products"
 
 interface FormData {
   client: {
@@ -25,6 +28,7 @@ interface FormData {
 
 
 export function OrderDetails() {
+  const { products } = useListProducts()
   const { data: clients, isLoading, mutateAsync } = useFindClients()
 
   const [formData, setFormData] = useState<FormData>({
@@ -49,7 +53,32 @@ export function OrderDetails() {
   }
 
   function handleSubmit() {
-    console.log({ formData })
+    const schema = z.object({
+      client: z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+      status: z.string().refine((value) => value !== '0'),
+      date: z.string().refine((value) => value !== ''),
+      time: z.string().refine((value) => value !== ''),
+    }).transform((data) => ({
+      ...data,
+      client: Number(data.client.id),
+      status: Number(data.status),
+    }))
+
+    try {
+      const data = schema.parse(formData)
+
+      if (products?.length === 0) {
+        toast.error('Adicione pelo menos um produto')
+        return
+      }
+
+      console.log({ data })
+    } catch (error) {
+      toast.error('Preencha todos os campos corretamente')
+    }
   }
 
   return (
