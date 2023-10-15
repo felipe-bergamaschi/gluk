@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from "react";
-import { Field } from 'formik';
 
 export interface Option {
   value: string;
@@ -27,6 +26,7 @@ export function AutoComplete({ name, label, placeholder, options, onChange, onSe
 
   function handleInputChange(e: any) {
     const input = e.target.value;
+
     setInputValue(input);
     onChange(input);
 
@@ -54,29 +54,29 @@ export function AutoComplete({ name, label, placeholder, options, onChange, onSe
       } else if (e.key === 'ArrowUp' && selectedOption > 0) {
         setSelectedOption(selectedOption - 1);
       } else if (e.key === 'Enter' && selectedOption !== -1) {
-        handleSuggestionClick(filteredOptions[selectedOption]);
+        e.preventDefault();
+
+        handleOptionClick(filteredOptions[selectedOption]);
       }
     }
   }
 
   const handleInputBlur = () => setShowOptions(false)
 
-  function handleSuggestionClick(suggestion: Option) {
-    setInputValue(suggestion.label);
+  function handleOptionClick(option: Option) {
+    setInputValue(option.label);
     setShowOptions(false);
-    onSelected(suggestion);
+    onSelected(option);
   }
 
-
   useEffect(() => {
-    console.log({ options })
     filterOptions()
   }, [options])
 
   return (
     <div className="input-group mb-3">
       <div className="form-floating">
-        <Field
+        <input
           id={name}
           ref={inputRef}
           name={name}
@@ -84,6 +84,7 @@ export function AutoComplete({ name, label, placeholder, options, onChange, onSe
 
           value={inputValue}
           onChange={handleInputChange}
+
           className="form-control"
 
           onKeyDown={handleKeyDown}
@@ -106,7 +107,7 @@ export function AutoComplete({ name, label, placeholder, options, onChange, onSe
             {filteredOptions.map((option, index) => (
               <li
                 key={index}
-                onClick={() => handleSuggestionClick(option)}
+                onClick={() => handleOptionClick(option)}
 
                 className={`list-group-item ${index === selectedOption ? 'active' : ''}`}
                 role="option"

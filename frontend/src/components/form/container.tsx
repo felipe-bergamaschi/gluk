@@ -1,23 +1,42 @@
 import { ReactNode } from 'react';
-import { Formik, Form, FormikHelpers, FormikValues } from 'formik';
+import { FormikHelpers, FormikValues, useFormik } from 'formik';
+
+import { createContext as createContextSelector, useContextSelector } from 'use-context-selector';
+
+type ContextData = {
+  formik: any;
+};
 
 type Props = {
   initialValues?: FormikValues;
-  onSubmit: (values: any, formikHelpers?: FormikHelpers<FormikValues>) => void | Promise<any>;
+  onSubmit: (values: any, formikHelpers?: FormikHelpers<any>) => void | Promise<any>;
   children: ReactNode;
+  className?: string;
 };
 
-function FormContainer({ initialValues, onSubmit, children }: Props) {
+const FormikContext = createContextSelector({} as ContextData);
+
+function FormContainer(props: Props) {
+  const formik = useFormik({
+    initialValues: props.initialValues || {},
+    onSubmit: props.onSubmit,
+  });
+
   return (
-    <Formik
-      initialValues={initialValues ?? {}}
-      onSubmit={onSubmit}
-    >
-      <Form>
-        {children}
-      </Form>
-    </Formik>
+    <FormikContext.Provider value={{ formik }}>
+      <form className={props.className} onSubmit={formik.handleSubmit}>
+        {props.children}
+      </form>
+    </FormikContext.Provider>
   );
+}
+
+export function useForm() {
+  const formik = useContextSelector(FormikContext, (context) => context.formik);
+
+  return {
+    formik
+  };
 }
 
 export { FormContainer };
