@@ -11,6 +11,7 @@ import { Select } from "@/components/form/input/select"
 import { DatePicker } from "@/components/form/input/date"
 import { DateTime } from "@/components/form/input/time"
 import { useFindClients } from '../../query'
+import { Summary } from "./Summary"
 
 interface FormData {
   client: {
@@ -32,25 +33,6 @@ export function OrderDetails() {
     date: '',
     time: '',
   })
-
-  const summary = [
-    {
-      label: 'Itens',
-      value: '0 itens'
-    },
-    {
-      label: 'Sub Total',
-      value: 'R$ 0,00'
-    },
-    {
-      label: 'Desconto',
-      value: 'R$ 0,00'
-    },
-    {
-      label: 'Total',
-      value: 'R$ 0,00'
-    },
-  ]
 
   const debounceSearching = debounce(async (value: string) => {
     if (value.length < 3) return
@@ -138,22 +120,7 @@ export function OrderDetails() {
 
         <ProductList />
 
-        <div className="mb-3">
-          <div className="bg-body-secondary rounded p-3">
-            <ul className="m-0">
-              {summary.map((item, index) => (
-                <li
-                  key={index}
-                  className={`m-0 d-flex align-items-center justify-content-between ${item.label === 'Total' && 'border-top mt-2 pt-2'}`}
-                >
-                  <span>{item.label}</span>
-
-                  <span className={`fw-bold ${item.label === 'Total' && 'h5'}`}>{item.value}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <Summary />
 
         <Button onClick={handleSubmit}>
           <Icon name="check" />

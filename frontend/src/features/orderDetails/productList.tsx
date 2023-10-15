@@ -9,7 +9,7 @@ export function ProductList() {
     <div className="flex-fill overflow-x-auto">
       <div className="accordion accordion-flush" id="accordionExample">
         {products?.map((product) => (
-          <div className="accordion-item">
+          <div className="accordion-item" key={product.id}>
             <h2 className="accordion-header">
               <button
                 className="accordion-button collapsed px-3 py-2"
