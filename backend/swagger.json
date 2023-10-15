@@ -117,6 +117,25 @@
           "additionalProperties": false
         }
       },
+      "SearchClientsControllerPostResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      },
       "SearchProductsControllerPostResponse": {
         "type": "array",
         "items": {
@@ -160,24 +179,17 @@
           "additionalProperties": false
         }
       },
-      "UsersControllerGetResponse": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            },
-            "name": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id",
-            "name"
-          ],
-          "additionalProperties": false
-        }
+      "def-interface--108-159--0-390": {
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "search"
+        ],
+        "additionalProperties": false
       },
       "def-interface--110-161--0-396": {
         "type": "object",
@@ -234,9 +246,9 @@
         }
       }
     },
-    "/search/products": {
+    "/search/clients": {
       "post": {
-        "operationId": "findProducts",
+        "operationId": "findClients",
         "tags": [
           "products"
         ],
@@ -244,7 +256,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/def-interface--110-161--0-396"
+                "$ref": "#/components/schemas/def-interface--108-159--0-390"
               }
             }
           }
@@ -255,7 +267,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchProductsControllerPostResponse"
+                  "$ref": "#/components/schemas/SearchClientsControllerPostResponse"
                 }
               }
             }
@@ -283,19 +295,28 @@
         }
       }
     },
-    "/users": {
-      "get": {
-        "operationId": "users",
+    "/search/products": {
+      "post": {
+        "operationId": "findProducts",
         "tags": [
-          "users"
+          "products"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/def-interface--110-161--0-396"
+              }
+            }
+          }
+        },
         "responses": {
           "2XX": {
             "description": "Default Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UsersControllerGetResponse"
+                  "$ref": "#/components/schemas/SearchProductsControllerPostResponse"
                 }
               }
             }

@@ -13,9 +13,9 @@ import * as HealthcheckController from "./routes/healthcheck";
 //@ts-ignore - we may have import type errors
 import * as ProductsController from "./routes/products";
 //@ts-ignore - we may have import type errors
-import * as SearchProductsController from "./routes/search/products";
+import * as SearchClientsController from "./routes/search/clients";
 //@ts-ignore - we may have import type errors
-import * as UsersController from "./routes/users";
+import * as SearchProductsController from "./routes/search/products";
 
 /**
  * The Kita generated fastify plugin. Registering it into your fastify instance will
@@ -88,6 +88,24 @@ export const Kita = fp<{}>(
     });
 
     fastify.addSchema({
+      $id: "SearchClientsControllerPostResponse",
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: {
+            type: "number",
+          },
+          name: {
+            type: "string",
+          },
+        },
+        required: ["id", "name"],
+        additionalProperties: false,
+      },
+    });
+
+    fastify.addSchema({
       $id: "SearchProductsControllerPostResponse",
       type: "array",
       items: {
@@ -125,21 +143,15 @@ export const Kita = fp<{}>(
     });
 
     fastify.addSchema({
-      $id: "UsersControllerGetResponse",
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          id: {
-            type: "number",
-          },
-          name: {
-            type: "string",
-          },
+      $id: "def-interface--108-159--0-390",
+      type: "object",
+      properties: {
+        search: {
+          type: "string",
         },
-        required: ["id", "name"],
-        additionalProperties: false,
       },
+      required: ["search"],
+      additionalProperties: false,
     });
 
     fastify.addSchema({
@@ -193,6 +205,28 @@ export const Kita = fp<{}>(
     );
 
     fastify.post(
+      "/search/clients",
+      {
+        schema: {
+          operationId: "findClients",
+          response: {
+            "2xx": { $ref: "SearchClientsControllerPostResponse" },
+            "4xx": { $ref: "ErrorResponse" },
+            "5xx": { $ref: "ErrorResponse" },
+          },
+          tags: ["products"],
+          body: { $ref: "def-interface--108-159--0-390" },
+        },
+      },
+      //@ts-ignore - we may have unused params
+      async (request, reply) => {
+        return SearchClientsController.post(
+          request.body as Parameters<typeof SearchClientsController.post>[0]
+        );
+      }
+    );
+
+    fastify.post(
       "/search/products",
       {
         schema: {
@@ -213,25 +247,6 @@ export const Kita = fp<{}>(
         );
       }
     );
-
-    fastify.get(
-      "/users",
-      {
-        schema: {
-          operationId: "users",
-          response: {
-            "2xx": { $ref: "UsersControllerGetResponse" },
-            "4xx": { $ref: "ErrorResponse" },
-            "5xx": { $ref: "ErrorResponse" },
-          },
-          tags: ["users"],
-        },
-      },
-      //@ts-ignore - we may have unused params
-      async (request, reply) => {
-        return UsersController.get();
-      }
-    );
   },
   {
     name: "Kita",
@@ -243,5 +258,5 @@ export const Kita = fp<{}>(
 
 export * as HealthcheckController from "./routes/healthcheck";
 export * as ProductsController from "./routes/products";
+export * as SearchClientsController from "./routes/search/clients";
 export * as SearchProductsController from "./routes/search/products";
-export * as UsersController from "./routes/users";

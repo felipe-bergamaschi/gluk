@@ -17,12 +17,9 @@ export interface DefInterface1101610396 {
   search: string;
 }
 
-export type UsersControllerGetResponseItem = {
-  id: number;
-  name: string;
-};
-
-export type UsersControllerGetResponse = UsersControllerGetResponseItem[];
+export interface DefInterface1081590390 {
+  search: string;
+}
 
 export type SearchProductsControllerPostResponseItemImagesItem = {
   id: string;
@@ -37,6 +34,13 @@ export type SearchProductsControllerPostResponseItem = {
 };
 
 export type SearchProductsControllerPostResponse = SearchProductsControllerPostResponseItem[];
+
+export type SearchClientsControllerPostResponseItem = {
+  id: number;
+  name: string;
+};
+
+export type SearchClientsControllerPostResponse = SearchClientsControllerPostResponseItem[];
 
 export type ProductsControllerGetResponseItemImagesItem = {
   id: string;
@@ -131,6 +135,55 @@ export const useProducts = <TData = Awaited<ReturnType<typeof products>>, TError
 }
 
 
+export const findClients = (
+    defInterface1081590390: DefInterface1081590390,
+ ) => {
+      
+      
+      return request<SearchClientsControllerPostResponse>(
+      {url: `/search/clients`, method: 'post',
+      headers: {'Content-Type': 'application/json', },
+      data: defInterface1081590390
+    },
+      );
+    }
+  
+
+
+export const getFindClientsMutationOptions = <TError = ErrorType<ErrorResponse>,
+    
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof findClients>>, TError,{data: DefInterface1081590390}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof findClients>>, TError,{data: DefInterface1081590390}, TContext> => {
+ const {mutation: mutationOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof findClients>>, {data: DefInterface1081590390}> = (props) => {
+          const {data} = props ?? {};
+
+          return  findClients(data,)
+        }
+
+        
+
+ 
+   return  { mutationFn, ...mutationOptions }}
+
+    export type FindClientsMutationResult = NonNullable<Awaited<ReturnType<typeof findClients>>>
+    export type FindClientsMutationBody = DefInterface1081590390
+    export type FindClientsMutationError = ErrorType<ErrorResponse>
+
+    export const useFindClients = <TError = ErrorType<ErrorResponse>,
+    
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof findClients>>, TError,{data: DefInterface1081590390}, TContext>, }
+) => {
+    
+      const mutationOptions = getFindClientsMutationOptions(options);
+     
+      return useMutation(mutationOptions);
+    }
+    
 export const findProducts = (
     defInterface1101610396: DefInterface1101610396,
  ) => {
@@ -180,59 +233,3 @@ export const getFindProductsMutationOptions = <TError = ErrorType<ErrorResponse>
       return useMutation(mutationOptions);
     }
     
-export const users = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return request<UsersControllerGetResponse>(
-      {url: `/users`, method: 'get', signal
-    },
-      );
-    }
-  
-
-export const getUsersQueryKey = () => {
-    
-    return [`/users`] as const;
-    }
-  
-
-    
-export const getUsersQueryOptions = <TData = Awaited<ReturnType<typeof users>>, TError = ErrorType<ErrorResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof users>>, TError, TData>, }
-) => {
-    
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getUsersQueryKey();
-
-  
-  
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof users>>> = ({ signal }) => users(signal);
-
-      
-    
-      
-      
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof users>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type UsersQueryResult = NonNullable<Awaited<ReturnType<typeof users>>>
-export type UsersQueryError = ErrorType<ErrorResponse>
-
-export const useUsers = <TData = Awaited<ReturnType<typeof users>>, TError = ErrorType<ErrorResponse>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof users>>, TError, TData>, }
-
-  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-
-  const queryOptions = getUsersQueryOptions(options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
