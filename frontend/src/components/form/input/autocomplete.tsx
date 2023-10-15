@@ -1,96 +1,122 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { Field } from 'formik';
 
-export function AutoComplete() {
-  const suggestions = ['Maçã', 'Banana', 'Cereja', 'Damasco', 'Figo', 'Goiaba'];
+export interface Option {
+  value: string;
+  label: string;
+}
 
-  const onSelected = (selected: any) => {
-    console.log(`Selecionado: ${selected}`);
-  };
+interface AutoCompleteProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+  options: Option[];
+  isLoading: boolean;
+  onChange: (value: string) => void;
+  onSelected: (value: Option) => void;
+}
 
-  const [inputValue, setInputValue] = useState('');
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+export function AutoComplete({ name, label, placeholder, options, onChange, onSelected, isLoading }: AutoCompleteProps) {
+  const [inputValue, setInputValue] = useState<string>('');
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+
+  const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
+  const [selectedOption, setSelectedOption] = useState<number>(-1);
 
   const inputRef = useRef(null);
 
-
-  const handleInputChange = (e: any) => {
+  function handleInputChange(e: any) {
     const input = e.target.value;
     setInputValue(input);
+    onChange(input);
 
-    // Filtrar as sugestões com base no valor de entrada
-    const filtered = suggestions.filter((suggestion: any) =>
-      suggestion.toLowerCase().includes(input.toLowerCase())
+    const filtered = options.filter((option) =>
+      option.label.toLowerCase().includes(input.toLowerCase())
     );
 
-    setFilteredSuggestions(filtered as any);
+    setFilteredOptions(filtered);
 
-    input.length > 0 ? setShowSuggestions(true) : setShowSuggestions(false);
-  };
+    input.length > 0 ? setShowOptions(true) : setShowOptions(false);
+  }
 
-  const handleSuggestionClick = (suggestion: any) => {
-    setInputValue(suggestion);
-    setShowSuggestions(false);
-    onSelected(suggestion);
-  };
+  function filterOptions() {
+    const filtered = options.filter((option) =>
+      option.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
 
-  const handleKeyDown = (e: any) => {
-    if (showSuggestions) {
-      if (e.key === 'ArrowDown' && selectedSuggestionIndex < filteredSuggestions.length - 1) {
-        setSelectedSuggestionIndex(selectedSuggestionIndex + 1);
-      } else if (e.key === 'ArrowUp' && selectedSuggestionIndex > 0) {
-        setSelectedSuggestionIndex(selectedSuggestionIndex - 1);
-      } else if (e.key === 'Enter' && selectedSuggestionIndex !== -1) {
-        handleSuggestionClick(filteredSuggestions[selectedSuggestionIndex]);
+    setFilteredOptions(filtered);
+  }
+
+  function handleKeyDown(e: any) {
+    if (showOptions) {
+      if (e.key === 'ArrowDown' && selectedOption < filteredOptions.length - 1) {
+        setSelectedOption(selectedOption + 1);
+      } else if (e.key === 'ArrowUp' && selectedOption > 0) {
+        setSelectedOption(selectedOption - 1);
+      } else if (e.key === 'Enter' && selectedOption !== -1) {
+        handleSuggestionClick(filteredOptions[selectedOption]);
       }
     }
-  };
+  }
 
-  const handleInputBlur = () => {
-    setTimeout(() => {
-      setShowSuggestions(false);
-    }, 200); // Delay para permitir que a lista seja clicada
-  };
+  const handleInputBlur = () => setShowOptions(false)
+
+  function handleSuggestionClick(suggestion: Option) {
+    setInputValue(suggestion.label);
+    setShowOptions(false);
+    onSelected(suggestion);
+  }
+
+
+  useEffect(() => {
+    console.log({ options })
+    filterOptions()
+  }, [options])
 
   return (
-    <div>
-      <div className="input-group mb-3">
-        <div className="form-floating">
-          <input
-            type="text"
-            className="form-control"
-            id="floatingInput"
-            placeholder="name@example.com"
+    <div className="input-group mb-3">
+      <div className="form-floating">
+        <Field
+          id={name}
+          ref={inputRef}
+          name={name}
+          placeholder={placeholder ?? label}
 
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            onBlur={handleInputBlur}
-            aria-owns={showSuggestions ? 'suggestions-list' : undefined}
-            aria-expanded={showSuggestions}
-            ref={inputRef}
-          />
+          value={inputValue}
+          onChange={handleInputChange}
+          className="form-control"
 
-          <label>Nome do cliente</label>
+          onKeyDown={handleKeyDown}
+          onBlur={handleInputBlur}
 
-          {showSuggestions && filteredSuggestions.length > 0 && (
-            <ul className="list-group" id="suggestions-list">
-              {filteredSuggestions.map((suggestion, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleSuggestionClick(suggestion)}
+          aria-owns={showOptions ? 'options-list' : undefined}
+          aria-expanded={showOptions}
+        />
 
-                  className={`list-group-item ${index === selectedSuggestionIndex ? 'active' : ''}`}
-                  role="option"
-                  aria-selected={index === selectedSuggestionIndex}
-                >
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <label htmlFor={name}>
+          {label}
+        </label>
+
+        {showOptions && filteredOptions.length > 0 && (
+          <ul className="list-group" id="options-list">
+            {isLoading && (
+              <li className="list-group-item">Carregando...</li>
+            )}
+
+            {filteredOptions.map((option, index) => (
+              <li
+                key={index}
+                onClick={() => handleSuggestionClick(option)}
+
+                className={`list-group-item ${index === selectedOption ? 'active' : ''}`}
+                role="option"
+                aria-selected={index === selectedOption}
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )
