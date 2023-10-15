@@ -1,16 +1,37 @@
+import { useState } from "react"
+
 import { Button } from "@/components/button"
-import { AutoComplete, Option } from "@/components/form/input/autocomplete"
+import { AutoComplete } from "@/components/form/input/autocomplete"
 import { Icon } from "@/components/icon"
 import { ProductList } from "./productList"
 
 import { useFindClients } from '../../query'
 import { FormContainer } from "@/components/form/container"
 import { debounce } from "debounce"
-import { TextField } from "@/components/form/textField"
-import { Field } from "formik"
+import { Select } from "@/components/form/input/select"
+import { DatePicker } from "@/components/form/input/date"
+import { DateTime } from "@/components/form/input/time"
+
+interface FormData {
+  client: {
+    id: string;
+    name: string;
+  };
+  status: string;
+  date: string;
+  time: string;
+}
+
 
 export function OrderDetails() {
   const { data: clients, isLoading, mutateAsync } = useFindClients()
+
+  const [formData, setFormData] = useState<FormData>({
+    client: {} as any,
+    status: '',
+    date: '',
+    time: '',
+  })
 
   const summary = [
     {
@@ -45,17 +66,29 @@ export function OrderDetails() {
     debounceSearching(search);
   }
 
+  function handleSubmit() {
+    console.log({ formData })
+  }
+
   return (
     <FormContainer
-      onSubmit={(data, rest) => console.log({ data, rest })}
+      onSubmit={handleSubmit}
       className="d-flex flex-column h-100"
     >
       <div className="p-3 flex-fill d-flex flex-column overflow-hidden">
         <AutoComplete
           name="client"
-          label="Buscar cliente"
+          label="Buscar cliente (selecione com o teclado)"
           onChange={handleChange}
-          onSelected={(value) => console.log({ value })}
+          onSelected={(value) => {
+            setFormData({
+              ...formData,
+              client: {
+                id: value.value,
+                name: value.label
+              }
+            })
+          }}
           options={clients?.map(client => ({
             value: client.id.toString(),
             label: client.name
@@ -63,31 +96,44 @@ export function OrderDetails() {
           isLoading={isLoading}
         />
 
-        <div className="form-floating mb-3">
-          <select className="form-select" id="inputGroupSelect01">
-            <option selected>Selecione um status</option>
-            <option value="1">Aberta</option>
-            <option value="2">Concluída</option>
-            <option value="3">Cancelada</option>
-          </select>
-
-          <label>Status</label>
-        </div>
+        <Select
+          label="Status"
+          name="status"
+          options={[
+            { value: '1', label: 'Aberta' },
+            { value: '2', label: 'Concluída' },
+            { value: '3', label: 'Cancelada' },
+          ]}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              status: e
+            })
+          }}
+        />
 
         <div className="d-flex gap-3">
-          <div className="input-group mb-3">
-            <div className="form-floating">
-              <input type="date" className="form-control" id="floatingInput" placeholder="name@example.com" maxLength={3} />
-              <label>Data da venda</label>
-            </div>
-          </div>
+          <DatePicker
+            label="Data da venda"
+            name="date"
+            onChange={(value) => {
+              setFormData({
+                ...formData,
+                date: value
+              })
+            }}
+          />
 
-          <div className="input-group mb-3">
-            <div className="form-floating">
-              <input type="time" className="form-control" id="floatingInput" placeholder="name@example.com" />
-              <label>Hora da venda</label>
-            </div>
-          </div>
+          <DateTime
+            label="Hora da venda"
+            name="time"
+            onChange={(value) => {
+              setFormData({
+                ...formData,
+                time: value
+              })
+            }}
+          />
         </div>
 
         <ProductList />
@@ -109,9 +155,7 @@ export function OrderDetails() {
           </div>
         </div>
 
-        <Button
-          type="submit"
-        >
+        <Button onClick={handleSubmit}>
           <Icon name="check" />
 
           Finalizar venda

@@ -99,7 +99,7 @@ export function AutoComplete({ name, label, placeholder, options, onChange, onSe
         </label>
 
         {showOptions && filteredOptions.length > 0 && (
-          <ul className="list-group" id="options-list">
+          <ul className="list-group shadow w-100 position-absolute" id="options-list">
             {isLoading && (
               <li className="list-group-item">Carregando...</li>
             )}
