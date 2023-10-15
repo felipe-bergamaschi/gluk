@@ -15,6 +15,7 @@ import { Summary } from "./Summary"
 import { z } from "zod"
 import toast from "react-hot-toast"
 import { useListProducts } from "@/contexts/products"
+import { useNavigate } from "react-router"
 
 interface FormData {
   client: {
@@ -30,6 +31,8 @@ interface FormData {
 export function OrderDetails() {
   const { products } = useListProducts()
   const { data: clients, isLoading, mutateAsync } = useFindClients()
+
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState<FormData>({
     client: {} as any,
@@ -63,7 +66,6 @@ export function OrderDetails() {
       time: z.string().refine((value) => value !== ''),
     }).transform((data) => ({
       ...data,
-      client: Number(data.client.id),
       status: Number(data.status),
     }))
 
@@ -75,7 +77,16 @@ export function OrderDetails() {
         return
       }
 
-      console.log({ data })
+      const order = {
+        ...data,
+        products
+      }
+
+      localStorage.setItem('GLUK:orders', JSON.stringify(order));
+
+      toast.success('Venda finalizada com sucesso')
+
+      navigate('/orders')
     } catch (error) {
       toast.error('Preencha todos os campos corretamente')
     }
