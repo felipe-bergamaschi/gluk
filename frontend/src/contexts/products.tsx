@@ -13,6 +13,7 @@ type ContextData = {
   products: IProduct[] | null;
   handleSetProducts: (data: ProductsControllerGetResponseItem) => void;
   updateProduct: (data: IProduct) => void;
+  deleteProduct: (id: string) => void;
 };
 
 type ProviderProps = {
@@ -48,12 +49,27 @@ export function Provider(props: ProviderProps) {
     });
   }, []);
 
+  const deleteProduct = useCallback((id: string) => {
+    setProducts((prev) => {
+      if (!prev) return prev;
+
+      const index = prev.findIndex((product) => product.id === id);
+
+      if (index === -1) return prev;
+
+      prev.splice(index, 1);
+
+      return [...prev];
+    });
+  }, []);
+
   return (
     <Context.Provider
       value={{
         products,
         handleSetProducts,
         updateProduct,
+        deleteProduct,
       }}
     >
       {props.children}
@@ -65,10 +81,12 @@ export function useListProducts() {
   const products = useContextSelector(Context, (context) => context.products);
   const handleSetProducts = useContextSelector(Context, (context) => context.handleSetProducts);
   const updateProduct = useContextSelector(Context, (context) => context.updateProduct);
+  const deleteProduct = useContextSelector(Context, (context) => context.deleteProduct);
 
   return {
     products,
     handleSetProducts,
     updateProduct,
+    deleteProduct,
   };
 }
