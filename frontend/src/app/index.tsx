@@ -77,7 +77,7 @@ export default function Page() {
               )
             }) : (
               <tr>
-                <td colSpan={5} className="text-center">Nenhuma venda encontrada</td>
+                <td colSpan={7} className="text-center">Nenhuma venda encontrada</td>
               </tr>
             )}
           </tbody>
