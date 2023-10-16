@@ -1,10 +1,24 @@
 import { Order } from '@/features/orderDetails'
 import { CommonLayout } from '../components/layouts/common'
 import { formatCurrency } from '@/utils/formatCurrency'
+import Decimal from 'decimal.js'
 
 export default function Page() {
   const dataLocal = localStorage.getItem('GLUK:orders') ?? '{}'
   const data: Order[] = JSON.parse(dataLocal)
+
+  function getStatus(status: string) {
+    switch (status) {
+      case '1':
+        return 'Aberta'
+      case '2':
+        return 'Concluída'
+      case '3':
+        return 'Cancelada'
+      default:
+        return 'Não encontrada'
+    }
+  }
 
   return (
     <CommonLayout
@@ -19,19 +33,19 @@ export default function Page() {
               <th scope="col">Cliente</th>
               <th scope="col">Qtd. produtos</th>
               <th scope="col">Valor total</th>
+              <th scope="col">Desconto</th>
+              <th scope="col">Status</th>
               <th scope="col">Data</th>
             </tr>
           </thead>
 
           <tbody>
             {data.length > 0 ? data.map((order, index) => {
-              const amount = order.products?.reduce((acc, product) => {
-                return acc + product.quantity
-              }, 0)
+              const amount = order.products?.reduce((acc, product) => acc + product.quantity, 0)
+              const subtotal = order.products?.reduce((acc, product) => acc + (product.price * product.quantity), 0) || 0
+              const discount = order.products?.reduce((acc, product) => acc + product.discount, 0) || 0
 
-              const total = order.products?.reduce((acc, product) => {
-                return acc + product.price * product.quantity
-              }, 0)
+              const total = new Decimal(subtotal).minus(discount).toNumber()
 
               return (
                 <tr key={Math.random()}>
@@ -39,6 +53,8 @@ export default function Page() {
                   <td>{order.client.name}</td>
                   <td>{amount}</td>
                   <td>{formatCurrency(total ?? 0)}</td>
+                  <td>{formatCurrency(discount ?? 0)}</td>
+                  <td>{getStatus(order.status)}</td>
                   <td>{order.date}</td>
                 </tr>
               )
