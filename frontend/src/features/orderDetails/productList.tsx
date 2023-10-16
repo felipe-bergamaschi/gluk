@@ -43,7 +43,7 @@ export function ProductList() {
                   </h6>
 
                   <small className="text-muted">
-                    Quantidade: 123
+                    Quantidade: {product.quantity}
                   </small>
 
                   <div

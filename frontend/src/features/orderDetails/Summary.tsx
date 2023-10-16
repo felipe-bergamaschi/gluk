@@ -5,15 +5,16 @@ import Decimal from "decimal.js"
 export function Summary() {
   const { products } = useListProducts()
 
+  const amount = products?.reduce((acc, product) => acc + product.quantity, 0)
   const subtotal = products?.reduce((acc, product) => acc + (product.price * product.quantity), 0) || 0
-  const discount = products?.reduce((acc, product) => acc + (product.discount * product.quantity), 0) || 0
+  const discount = products?.reduce((acc, product) => acc + product.discount, 0) || 0
 
   const total = new Decimal(subtotal).minus(discount).toNumber()
 
   const summary = [
     {
       label: 'Itens',
-      value: `${products?.length || 0} itens`
+      value: `${amount ?? 0} itens`
     },
     {
       label: 'Sub Total',
