@@ -8,7 +8,7 @@ interface CommonLayoutProps extends BodyProps {
   // children: React.ReactNode
 }
 
-export function CommonLayout({ children, title, breadcrumbs, sidebar }: CommonLayoutProps) {
+export function CommonLayout({ children, title, breadcrumbs, sidebar, actions }: CommonLayoutProps) {
   return (
     <div className="w-100 h-100 overflow-hidden d-flex">
       <Sidebar />
@@ -17,7 +17,7 @@ export function CommonLayout({ children, title, breadcrumbs, sidebar }: CommonLa
         <Header />
 
         <div className="bg-body flex-fill d-flex overflow-hidden">
-          <Body title={title} breadcrumbs={breadcrumbs}>
+          <Body title={title} breadcrumbs={breadcrumbs} actions={actions}>
             {children}
           </Body>
 

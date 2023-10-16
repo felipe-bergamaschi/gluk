@@ -4,10 +4,15 @@ import { formatCurrency } from '@/utils/formatCurrency'
 import Decimal from 'decimal.js'
 import { format } from 'timeago.js';
 import { formatDate } from '@/utils/formateDate';
+import { Button } from '@/components/button';
+import { useNavigate } from 'react-router';
+import { Icon } from '@/components/icon';
 
 export default function Page() {
   const dataLocal = localStorage.getItem('GLUK:orders') ?? '{}'
   const data: Order[] = JSON.parse(dataLocal)
+
+  const navigation = useNavigate()
 
   function getStatus(status: string) {
     switch (status) {
@@ -22,10 +27,20 @@ export default function Page() {
     }
   }
 
+  function NewOrder() {
+    return (
+      <Button onClick={() => navigation('new-order')}>
+        <Icon name='plus' />
+        Nova venda
+      </Button>
+    )
+  }
+
   return (
     <CommonLayout
       title='Todas as vendas'
       breadcrumbs={['Lista de vendas']}
+      actions={<NewOrder />}
     >
       <div className="bd-example">
         <table className="table table-hover">
