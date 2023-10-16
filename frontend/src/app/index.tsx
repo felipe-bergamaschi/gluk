@@ -1,23 +1,73 @@
-import { OrderDetails } from '@/features/orderDetails'
+import { Order } from '@/features/orderDetails'
 import { CommonLayout } from '../components/layouts/common'
-import { ProductContent } from '@/features/productContent'
-import { Provider as ProductProvider } from '@/contexts/products'
+import { formatCurrency } from '@/utils/formatCurrency'
+import Decimal from 'decimal.js'
+import { format } from 'timeago.js';
+import { formatDate } from '@/utils/formateDate';
 
 export default function Page() {
+  const dataLocal = localStorage.getItem('GLUK:orders') ?? '{}'
+  const data: Order[] = JSON.parse(dataLocal)
+
+  function getStatus(status: string) {
+    switch (status) {
+      case '1':
+        return 'Aberta'
+      case '2':
+        return 'Concluída'
+      case '3':
+        return 'Cancelada'
+      default:
+        return 'Não encontrada'
+    }
+  }
+
   return (
-    <ProductProvider>
-      <CommonLayout
-        title='Nova venda'
-        breadcrumbs={['Cadastro de venda']}
-        sidebar={{
-          title: 'Detalhes da venda',
-          content: <OrderDetails />,
-          open: true,
-          hideCloseButton: true,
-        }}
-      >
-        <ProductContent />
-      </CommonLayout>
-    </ProductProvider>
+    <CommonLayout
+      title='Todas as vendas'
+      breadcrumbs={['Lista de vendas']}
+    >
+      <div className="bd-example">
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Qtd. produtos</th>
+              <th scope="col">Valor total</th>
+              <th scope="col">Desconto</th>
+              <th scope="col">Status</th>
+              <th scope="col">Data</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {data.length > 0 ? data.map((order, index) => {
+              const amount = order.products?.reduce((acc, product) => acc + product.quantity, 0)
+              const subtotal = order.products?.reduce((acc, product) => acc + (product.price * product.quantity), 0) || 0
+              const discount = order.products?.reduce((acc, product) => acc + product.discount, 0) || 0
+
+              const total = new Decimal(subtotal).minus(discount).toNumber()
+
+              return (
+                <tr key={Math.random()}>
+                  <th scope="row">{index + 1}</th>
+                  <td>{order.client.name}</td>
+                  <td>{amount}</td>
+                  <td>{formatCurrency(total ?? 0)}</td>
+                  <td>{formatCurrency(discount ?? 0)}</td>
+                  <td>{getStatus(order.status)}</td>
+                  <td>{format(formatDate(order.date, order.time), 'pt_BR')}</td>
+                </tr>
+              )
+            }) : (
+              <tr>
+                <td colSpan={5} className="text-center">Nenhuma venda encontrada</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </CommonLayout>
   )
 }

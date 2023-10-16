@@ -5,7 +5,7 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const File1 = lazy(() => import('./app/index'));
-const File2 = lazy(() => import('./app/orders'));
+const File2 = lazy(() => import('./app/new-order'));
 
 
 
@@ -36,8 +36,8 @@ export function AppRoutes({ custom404: Custom404, customLoading: CustomLoading }
         
           <Route 
             element={<File2 />} 
-            path="/orders" 
-            key="/orders"  
+            path="/new-order" 
+            key="/new-order"  
           />
           <Route
             path="*"

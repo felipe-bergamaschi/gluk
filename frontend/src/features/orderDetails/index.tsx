@@ -86,7 +86,7 @@ export function OrderDetails() {
 
       toast.success('Venda finalizada com sucesso')
 
-      navigate('/orders')
+      navigate('/')
     } catch (error) {
       toast.error('Preencha todos os campos corretamente')
     }
