@@ -2,6 +2,7 @@ import { Order } from '@/features/orderDetails'
 import { CommonLayout } from '../components/layouts/common'
 import { formatCurrency } from '@/utils/formatCurrency'
 import Decimal from 'decimal.js'
+import { format } from 'timeago.js';
 
 export default function Page() {
   const dataLocal = localStorage.getItem('GLUK:orders') ?? '{}'
@@ -55,7 +56,7 @@ export default function Page() {
                   <td>{formatCurrency(total ?? 0)}</td>
                   <td>{formatCurrency(discount ?? 0)}</td>
                   <td>{getStatus(order.status)}</td>
-                  <td>{order.date}</td>
+                  <td>{format(order.date, 'pt_BR')}</td>
                 </tr>
               )
             }) : (

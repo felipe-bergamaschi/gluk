@@ -5,6 +5,12 @@ import { Toaster } from 'react-hot-toast'
 
 import { AppRoutes } from './routes'
 
+import { register } from 'timeago.js';
+
+import pt_BR from './utils/timeagoRegister';
+
+register('pt_BR', pt_BR);
+
 import './index.css'
 
 import 'bootstrap/dist/css/bootstrap.css';
