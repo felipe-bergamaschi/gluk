@@ -72,7 +72,7 @@ export function OrderDetails() {
     try {
       const data = schema.parse(formData)
 
-      if (products?.length === 0) {
+      if (products === null || products?.length === 0) {
         toast.error('Adicione pelo menos um produto')
         return
       }
