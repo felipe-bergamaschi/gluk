@@ -14,10 +14,10 @@ import { useFindClients } from '../../query'
 import { Summary } from "./Summary"
 import { z } from "zod"
 import toast from "react-hot-toast"
-import { useListProducts } from "@/contexts/products"
+import { IProduct, useListProducts } from "@/contexts/products"
 import { useNavigate } from "react-router"
 
-interface FormData {
+export interface FormData {
   client: {
     id: string;
     name: string;
@@ -27,6 +27,9 @@ interface FormData {
   time: string;
 }
 
+export interface Order extends FormData {
+  products: IProduct[] | null;
+}
 
 export function OrderDetails() {
   const { products } = useListProducts()
@@ -64,10 +67,7 @@ export function OrderDetails() {
       status: z.string().refine((value) => value !== '0'),
       date: z.string().refine((value) => value !== ''),
       time: z.string().refine((value) => value !== ''),
-    }).transform((data) => ({
-      ...data,
-      status: Number(data.status),
-    }))
+    })
 
     try {
       const data = schema.parse(formData)
@@ -82,7 +82,7 @@ export function OrderDetails() {
         products
       }
 
-      localStorage.setItem('GLUK:orders', JSON.stringify(order));
+      createOrder(order)
 
       toast.success('Venda finalizada com sucesso')
 
@@ -90,6 +90,19 @@ export function OrderDetails() {
     } catch (error) {
       toast.error('Preencha todos os campos corretamente')
     }
+  }
+
+  function createOrder(order: Order) {
+    const dataLocal = localStorage.getItem('GLUK:orders')
+
+    if (!dataLocal) {
+      localStorage.setItem('GLUK:orders', JSON.stringify([order]));
+      return true
+    }
+
+    const data: Order[] = JSON.parse(dataLocal)
+
+    localStorage.setItem('GLUK:orders', JSON.stringify([order, ...data]));
   }
 
   return (

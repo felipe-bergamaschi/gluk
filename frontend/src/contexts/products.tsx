@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { createContext as createContextSelector, useContextSelector } from 'use-context-selector';
 
-interface IProduct extends ProductsControllerGetResponseItem {
+export interface IProduct extends ProductsControllerGetResponseItem {
   quantity: number;
   discount: number;
 }
